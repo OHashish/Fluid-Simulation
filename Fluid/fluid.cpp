@@ -53,12 +53,12 @@ int toggleSS5 = 0;
 
 
 //Play
-glm::dvec2 G(0.0, -1000.0);
-double REST_DENSITY = 1000.0;
-double DT = 0.02;
+glm::dvec2 G(0.0, -10.0);
+double REST_DENSITY = 700.0;
+double DT = 0.3;
 double PARTICLE_RADIUS = 0.09;
-double GAS_CONSTANT = 2000.0;
-double H_KER_RAD = PARTICLE_RADIUS*2.4;
+double GAS_CONSTANT = 1000.0;
+double H_KER_RAD = PARTICLE_RADIUS*2.1;
 double VELOCITY_DAMP = 0.5;
 double MASS = 2.5;
 double SURFACE_TENSION_CONSTANT = 0.5;
