@@ -7,6 +7,7 @@
 #include <QWindow>
 #include <QTextEdit>
 #include <QLineEdit>
+#include <QCheckBox>
 // constructor / destructor
 FluidWindow::FluidWindow(QWidget *parent)
     : QWidget(parent)
@@ -116,31 +117,41 @@ FluidWindow::FluidWindow(QWidget *parent)
     windowLayouttest->addWidget(dd);
     connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(DAMP(double)));
 
+//    QPushButton *S2 = new QPushButton("Toggle Viscosity",this);
+//    S2->setMaximumWidth(400);
+//    connect(S2,SIGNAL(released()), reader, SLOT(SS2()));
+//    windowLayoutUI->addWidget(S2);
 
+//    QPushButton *S3 = new QPushButton("Toggle Surface Tension",this);
+//    S3->setMaximumWidth(400);
+//    connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
+//    windowLayoutUI->addWidget(S3);
 
-    QPushButton *S2 = new QPushButton("Simulate 2",this);
-    S2->setMaximumWidth(100);
+    QCheckBox *S2 = new QCheckBox("Toggle Viscosity", this);
+    S2->setMaximumWidth(400);
+    S2->setCheckable(true);
+    S2->setCheckState(Qt::Checked);
+//    S2->setLayoutDirection(Qt::RightToLeft);
+//    S2->setStyleSheet("padding-right: 25%;");
     connect(S2,SIGNAL(released()), reader, SLOT(SS2()));
-
     windowLayoutUI->addWidget(S2);
 
-    QPushButton *S3 = new QPushButton("Simulate 3",this);
-    S3->setMaximumWidth(100);
+    QCheckBox *S3 = new QCheckBox("Toggle Surface Tension", this);
+    S3->setMaximumWidth(400);
+    S3->setCheckable(true);
+    S3->setCheckState(Qt::Checked);
+//    S3->setLayoutDirection(Qt::RightToLeft);
     connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
-
-
     windowLayoutUI->addWidget(S3);
 
     QPushButton *S4 = new QPushButton("Simulate 4",this);
-    S4->setMaximumWidth(100);
+    S4->setMaximumWidth(300);
     connect(S4,SIGNAL(released()), reader, SLOT(SS4()));
-
     windowLayoutUI->addWidget(S4);
 
     QPushButton *S5 = new QPushButton("Simulate 5",this);
     S5->setMaximumWidth(100);
     connect(S5,SIGNAL(released()), reader, SLOT(SS5()));
-
     windowLayoutUI->addWidget(S5);
 
 

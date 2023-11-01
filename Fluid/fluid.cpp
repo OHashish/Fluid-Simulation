@@ -28,10 +28,10 @@
 
 
 double framespeed = 0;
-int toggleSS2 = 0;
-int toggleSS3 = 0;
-int toggleSS4 = 0;
-int toggleSS5 = 0;
+bool toggleViscosity = true;
+bool toggleSurfaceTension = true;
+bool toggleSS4 = 0;
+bool toggleSS5 = 0;
 
 //Default
 //glm::dvec2 G(0.0, -10.0);
@@ -57,11 +57,11 @@ glm::dvec2 G(0.0, -10.0);
 double REST_DENSITY = 700.0;
 double DT = 0.3;
 double PARTICLE_RADIUS = 0.09;
-double GAS_CONSTANT = 800.0;
+double GAS_CONSTANT = 800.0; //500 with Poly in pressure
 double H_KER_RAD = PARTICLE_RADIUS*2.01;
 double VELOCITY_DAMP = 0.5;
 double MASS = 2.5;
-double SURFACE_TENSION_CONSTANT = 0.5;
+double SURFACE_TENSION_CONSTANT = 0.9;
 double VISCOSITY_CONSTANT = 3000.0;
 float EPS = PARTICLE_RADIUS; // boundary epsilon
 
@@ -222,7 +222,7 @@ void Fluid::blobCreator(){
     glColor3f(0.0f,1.0f,0.0f);
        for ( double i = 0 ; i < 2;i+=PARTICLE_RADIUS*2){
            for ( double j = 0 ; j < 3;j+=PARTICLE_RADIUS*2){
-               addParticle(i, j);
+               addParticle(i, j-3);
            }
        }
 
@@ -293,29 +293,15 @@ void Fluid::DAMP(double k){
 }
 void Fluid::SS2(){
 
-    if (toggleSS2==0){
-        toggleSS2=1;
-        toggleSS3=0;
-        toggleSS4=0;
-        toggleSS5=0;
-    }else {
-
-        toggleSS2=0;
-    }
+    toggleViscosity= !toggleViscosity;
+    cout<<toggleViscosity<<endl;
     Clear();
     blobCreator();
 }
 
 void Fluid::SS3(){
-    if (toggleSS3==0){
-        toggleSS3=1;
-        toggleSS2=0;
-        toggleSS4=0;
-        toggleSS5=0;
-    }else {
 
-        toggleSS3=0;
-    }
+    toggleSurfaceTension = !toggleSurfaceTension;
     Clear();
     blobCreator();
 }
@@ -323,8 +309,8 @@ void Fluid::SS3(){
 void Fluid::SS4(){
     if (toggleSS4==0){
         toggleSS4=1;
-        toggleSS3=0;
-        toggleSS2=0;
+        toggleSurfaceTension=0;
+        toggleViscosity=0;
         toggleSS5=0;
     }else {
 
@@ -337,9 +323,9 @@ void Fluid::SS4(){
 void Fluid::SS5(){
     if (toggleSS5==0){
         toggleSS5=1;
-        toggleSS3=0;
+        toggleSurfaceTension=0;
         toggleSS4=0;
-        toggleSS2=0;
+        toggleViscosity=0;
     }else {
 
         toggleSS5=0;
@@ -389,7 +375,7 @@ void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityCon
              if (r < kernelRadiusH){
                  pressureForce +=  ((pj.pressure +  pi.pressure)/(2.0*pj.density)) *
                                     SPIKY_GRAD * pow(kernelRadiusH - r, 2.0) *
-                         //                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
+//                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
                                     -1.0*glm::normalize(rLen)  *
                                     MASS;
 
@@ -398,7 +384,8 @@ void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityCon
                                      MASS;
 
                  n             +=  ((1.0)/(pj.density)) *
-                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *glm::normalize(rLen) *
+                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
+                                    glm::normalize(rLen) *
                                     MASS;
 
                  surfaceTensionForce +=  ((1.0)/(pj.density)) *
@@ -411,21 +398,22 @@ void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityCon
          viscosityForce *= viscosityConstant;
          surfaceTensionForce *= -1.0*SURFACE_TENSION_CONSTANT * (n/glm::length(n)) ;
 
-//          double THEONE = glm::length(n);
-        if ( i==int(particles.size()/2.0) ){
-            cout<<"Surface Tension Force: "<<surfaceTensionForce.x<<" "<<surfaceTensionForce.y<<endl;
-            cout<<"n: "<<n.x<<" "<<n.y<<endl;
-             cout<<"n length: "<<glm::length(n)<<endl;
-             cout<<bool(isnan(surfaceTensionForce.x))<<endl;
-             cout<<bool(isnan(n.x))<<endl;
-        }
+//         if ( i==int(particles.size()/2.0) ){
+//             cout<<"Surface Tension Force: "<<surfaceTensionForce.x<<" "<<surfaceTensionForce.y<<endl;
+//             cout<<"n: "<<n.x<<" "<<n.y<<endl;
+//             cout<<"n length: "<<glm::length(n)<<endl;
+//             cout<<bool(isnan(surfaceTensionForce.x))<<endl;
+//             cout<<bool(isnan(n.x))<<endl;
+//         }
 
-         if (!isnan(surfaceTensionForce.x)){
+         if (toggleViscosity){
+             gravityForce += viscosityForce;
+         }
+         if (!isnan(surfaceTensionForce.x) && toggleSurfaceTension){
+                 gravityForce += surfaceTensionForce;
+         }
 
-             viscosityForce += surfaceTensionForce;
-          }
-
-         pi.force =  (gravityForce + pressureForce + viscosityForce) / pi.density  ;
+         pi.force =  (gravityForce + pressureForce) / pi.density  ;
          i++;
     }
 }
