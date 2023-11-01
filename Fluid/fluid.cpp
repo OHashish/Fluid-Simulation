@@ -6,7 +6,6 @@
 #include "cstring"
 #include "stdlib.h"
 #include <algorithm>
-#include <iterator>
 #include <math.h>
 #include <OpenGL/glu.h>
 #include <OpenGL/gl.h>
@@ -14,18 +13,8 @@
 #include <QGLWidget>
 #include <QTimer>
 #include <QDebug>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QFileDialog>
 #include <QMouseEvent>
 #include <iostream>
-#include "Jacobi"
-#include "Dense"
-#include <QImage>
-#include <QProcess>
-
 
 double framespeed = 0;
 bool toggleViscosity = true;
@@ -204,13 +193,14 @@ void Fluid::paintGL(){
 
 void Fluid::addParticle(double i, double j)
 {
-    Particle p;
-    p.position=glm::dvec2(i,j);
-    p.velocity=glm::dvec2(0,0);
-    p.force=glm::dvec2(0,-10.0);
-    p.density = 0.0;
-    p.pressure= 0.0;
-    p.viscosity =0.0;
+    Particle p = {
+        glm::dvec2(i, j), // Position
+        glm::dvec2(0, 0), // Velocity
+        glm::dvec2(0, -10.0), // Force
+        0.0, // Density
+        0.0, // Pressure
+    };
+
     particles.push_back(p);
 }
 
@@ -357,7 +347,7 @@ void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, doub
     }
 }
 
-void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityConstant)
+void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, double surfaceConstant)
 {
     int i = 0;
     for (auto &pi : particles) {
@@ -396,7 +386,7 @@ void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityCon
 
          glm::dvec2 gravityForce(G * MASS);
          viscosityForce *= viscosityConstant;
-         surfaceTensionForce *= -1.0*SURFACE_TENSION_CONSTANT * (n/glm::length(n)) ;
+         surfaceTensionForce *= -1.0*surfaceConstant * (n/glm::length(n)) ;
 
 //         if ( i==int(particles.size()/2.0) ){
 //             cout<<"Surface Tension Force: "<<surfaceTensionForce.x<<" "<<surfaceTensionForce.y<<endl;
@@ -456,10 +446,10 @@ void Fluid::integrate(double dt, double damp,bool first)
 void Fluid::simulateFluid(double supportRadius, double dt , double restDensity , double stiffness , double viscosityConstant , double damp , double surfaceConstant) {
 
     calculatePressureDensity(supportRadius, stiffness, restDensity);
-    calculateForces(dt, supportRadius, viscosityConstant);
+    calculateForces(supportRadius, viscosityConstant, surfaceConstant);
     integrate(dt, damp,true);
     calculatePressureDensity(supportRadius, stiffness, restDensity);
-    calculateForces(dt, supportRadius, viscosityConstant);
+    calculateForces(supportRadius, viscosityConstant, surfaceConstant);
     integrate(dt, damp,false);
 
 }

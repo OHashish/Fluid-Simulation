@@ -1,5 +1,6 @@
 #include "fluidwindow.h"
 #include "fluid.h"
+#include "triangularbutton.h"
 #include <QDebug>
 #include <iostream>
 #include <QToolBar>
@@ -8,6 +9,8 @@
 #include <QTextEdit>
 #include <QLineEdit>
 #include <QCheckBox>
+#include <QToolButton>
+#include <QTransform>
 // constructor / destructor
 FluidWindow::FluidWindow(QWidget *parent)
     : QWidget(parent)
@@ -144,13 +147,11 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
     windowLayoutUI->addWidget(S3);
 
-    QPushButton *S4 = new QPushButton("Simulate 4",this);
-    S4->setMaximumWidth(300);
-    connect(S4,SIGNAL(released()), reader, SLOT(SS4()));
-    windowLayoutUI->addWidget(S4);
 
-    QPushButton *S5 = new QPushButton("Simulate 5",this);
-    S5->setMaximumWidth(100);
+    TriangularButton *S5 = new TriangularButton("",this);
+    S5->setLayoutDirection(Qt::RightToLeft);
+    S5->setStyleSheet("background-color: rgb(101, 101, 101);");
+    S5->setMaximumWidth(50);
     connect(S5,SIGNAL(released()), reader, SLOT(SS5()));
     windowLayoutUI->addWidget(S5);
 

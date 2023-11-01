@@ -50,12 +50,10 @@ public:
 
     struct Particle{
         glm::dvec2 position;
-        glm::dvec2 prevPosition;
         glm::dvec2 velocity;
+        glm::dvec2 force;
         double density;
         double pressure;
-        double viscosity;
-        glm::dvec2 force;
     };
 
     vector<Particle> particles;
@@ -65,24 +63,10 @@ public:
     void simulateFluid(double h, double dt, double restDensity, double stiffness, double viscosityConstant, double damp, double surfaceConstant);
     void blobCreator();
 
-    double computeDensity( int i ,double supportRadius);
-    double computeSpikyKernel(double distance, double supportRadius);
-    double computeViscosityKernel(double r, double h);
-    double computePressure(Particle p, double stiffness, double restDensity);
-    double computePoly6KernelGradiant(double r, double h);
-    double computeViscosityLaplacian(double r, double h);
-    double computeSpikyKernelGradiant(double r, double h);
-    double computePoly6KernelLaplacian(double r, double h);
-
-    void calculateDensityPressure();
     void calculatePressureDensity(double supportRadius, double stiffness, double restDensity);
-    void calculateForces(double dt, double supportRadius, double viscosityConstant);
+    void calculateForces( double supportRadius, double viscosityConstant,  double surfaceConstant);
     void integrate(double dt, double damp, bool first);
-    void createPressure(int i, glm::dvec2 rLen, double supportRadius, glm::dvec2 pressureForce, int j, double distance);
-    void createPressure(int i, double supportRadius, int j, glm::dvec2 pressureForce);
-    void createPressure(int j, double supportRadius, glm::dvec2 pressureForce, int i, double distance, glm::dvec2 rLen);
-    void d(double supportRadius, glm::dvec2 rLen, int j, int i, double distance);
-    void Bruh();
+
     void addParticle(double i, double j);
 };
 

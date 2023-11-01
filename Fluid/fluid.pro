@@ -20,8 +20,10 @@ CONFIG += c++17
 SOURCES += \
     fluidwindow.cpp \
     fluid.cpp \
-    main.cpp
+    main.cpp \
+    triangularbutton.cpp
 
 HEADERS += \
     fluidwindow.h \
-    fluid.h
+    fluid.h \
+    triangularbutton.h
