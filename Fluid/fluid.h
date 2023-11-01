@@ -83,6 +83,7 @@ public:
     void createPressure(int j, double supportRadius, glm::dvec2 pressureForce, int i, double distance, glm::dvec2 rLen);
     void d(double supportRadius, glm::dvec2 rLen, int j, int i, double distance);
     void Bruh();
+    void addParticle(double i, double j);
 };
 
 

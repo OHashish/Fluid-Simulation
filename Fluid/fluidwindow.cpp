@@ -35,7 +35,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     px->setMaximumWidth(80);
     px->setMaximumHeight(30);
     px->setMinimum(-360);
-    px->setMaximum(360);
+    px->setMaximum(5000);
     px->setValue(20);
     windowLayouttest->addWidget(px);
     connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(posX(double)));
@@ -47,7 +47,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     k->setMaximumWidth(80);
     k->setMaximumHeight(30);
     k->setMinimum(-360);
-    k->setMaximum(360);
+    k->setMaximum(5000);
     k->setValue(3);
     windowLayouttest->addWidget(k);
     connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(gasConstant(double)));
@@ -59,7 +59,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     vc->setMaximumWidth(80);
     vc->setMaximumHeight(30);
     vc->setMinimum(-360);
-    vc->setMaximum(360);
+    vc->setMaximum(5000);
     vc->setValue(7);
     windowLayouttest->addWidget(vc);
     connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(vCONSTANT(double)));
@@ -71,7 +71,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     kr->setMaximumWidth(80);
     kr->setMaximumHeight(30);
     kr->setMinimum(-360);
-    kr->setMaximum(360);
+    kr->setMaximum(5000);
     kr->setValue(1.5);
     windowLayouttest->addWidget(kr);
     connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(kRADIUS(double)));
@@ -83,7 +83,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     st->setMaximumWidth(80);
     st->setMaximumHeight(30);
     st->setMinimum(-360);
-    st->setMaximum(360);
+    st->setMaximum(5000);
     st->setValue(10);
     windowLayouttest->addWidget(st);
     connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(surfaceTESNION(double)));
@@ -95,7 +95,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     dt->setMaximumWidth(80);
     dt->setMaximumHeight(30);
     dt->setMinimum(-360);
-    dt->setMaximum(360);
+    dt->setMaximum(5000);
     dt->setDecimals(3);
     dt->setSingleStep(0.001);
     dt->setValue(0.01);
@@ -109,7 +109,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     dd->setMaximumWidth(80);
     dd->setMaximumHeight(30);
     dd->setMinimum(-360);
-    dd->setMaximum(360);
+    dd->setMaximum(5000);
     dd->setDecimals(2);
     dd->setSingleStep(0.01);
     dd->setValue(0.5);

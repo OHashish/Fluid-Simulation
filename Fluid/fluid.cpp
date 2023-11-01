@@ -57,12 +57,12 @@ glm::dvec2 G(0.0, -10.0);
 double REST_DENSITY = 700.0;
 double DT = 0.3;
 double PARTICLE_RADIUS = 0.09;
-double GAS_CONSTANT = 1000.0;
-double H_KER_RAD = PARTICLE_RADIUS*2.1;
+double GAS_CONSTANT = 800.0;
+double H_KER_RAD = PARTICLE_RADIUS*2.01;
 double VELOCITY_DAMP = 0.5;
 double MASS = 2.5;
 double SURFACE_TENSION_CONSTANT = 0.5;
-double VISCOSITY_CONSTANT = 600.0;
+double VISCOSITY_CONSTANT = 3000.0;
 float EPS = PARTICLE_RADIUS; // boundary epsilon
 
 //float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
@@ -73,12 +73,12 @@ float EPS = PARTICLE_RADIUS; // boundary epsilon
 //float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
 //float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
 
-float POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
-float POLY6_GRAD = -945.f / (32.0* M_PI * pow(H_KER_RAD, 11.f));
-float POLY6_LAP = 945.f / (8.0 * M_PI * pow(H_KER_RAD, 11.f));
+double POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
+double POLY6_GRAD = -945.f / (32.0* M_PI * pow(H_KER_RAD,9.f));
+double POLY6_LAP = -945.f / (8.0 * M_PI * pow(H_KER_RAD, 9.f));
 
-float SPIKY_GRAD = -45.f / (M_PI * pow(H_KER_RAD, 6.f));
-float VISC_LAP = 45.f / (M_PI * pow(H_KER_RAD, 6.f));
+double SPIKY_GRAD = -45.f / (M_PI * pow(H_KER_RAD, 6.f));
+double VISC_LAP = 45.f / (M_PI * pow(H_KER_RAD, 6.f));
 
 
 Fluid::Fluid(){
@@ -202,6 +202,18 @@ void Fluid::paintGL(){
 
 }
 
+void Fluid::addParticle(double i, double j)
+{
+    Particle p;
+    p.position=glm::dvec2(i,j);
+    p.velocity=glm::dvec2(0,0);
+    p.force=glm::dvec2(0,-10.0);
+    p.density = 0.0;
+    p.pressure= 0.0;
+    p.viscosity =0.0;
+    particles.push_back(p);
+}
+
 void Fluid::blobCreator(){
     GLUquadricObj *quadric= gluNewQuadric();
     gluQuadricDrawStyle( quadric, GLU_FILL);
@@ -210,14 +222,7 @@ void Fluid::blobCreator(){
     glColor3f(0.0f,1.0f,0.0f);
        for ( double i = 0 ; i < 2;i+=PARTICLE_RADIUS*2){
            for ( double j = 0 ; j < 3;j+=PARTICLE_RADIUS*2){
-               Particle p;
-               p.position=glm::dvec2(i,j);
-               p.velocity=glm::dvec2(0,0);
-               p.force=glm::dvec2(0,-100.0);
-               p.density = 0.0;
-               p.pressure= 0.0;
-               p.viscosity=0.0;
-               particles.push_back(p);
+               addParticle(i, j);
            }
        }
 
@@ -345,7 +350,7 @@ void Fluid::SS5(){
 
 double Fluid::computePoly6Kernel(double r, double h) {
     if (r > h || r < 0)  return 0;
-//    double coeff = 315.0 / (64.0 * M_PI * pow(h, 9));
+
     double q = pow(h, 2) - pow(r, 2);
     return POLY6 * pow(q, 3);
 }
@@ -368,6 +373,7 @@ void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, doub
 
 void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityConstant)
 {
+    int i = 0;
     for (auto &pi : particles) {
          glm::dvec2 pressureForce(0,0);
          glm::dvec2 viscosityForce(0,0);
@@ -382,38 +388,45 @@ void Fluid::calculateForces(double dt, double kernelRadiusH, double viscosityCon
              double r = glm::length(rLen);
              if (r < kernelRadiusH){
                  pressureForce +=  ((pj.pressure +  pi.pressure)/(2.0*pj.density)) *
-//                                    SPIKY_GRAD * pow(kernelRadiusH - r, 3.0) *
                                     SPIKY_GRAD * pow(kernelRadiusH - r, 2.0) *
-                                    -1.0*glm::normalize(rLen) *
+                         //                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
+                                    -1.0*glm::normalize(rLen)  *
                                     MASS;
 
-                 viscosityForce +=  ((pj.velocity -  pi.velocity)/(pj.density)) *
-                                    (double)VISC_LAP * (kernelRadiusH - r) *
-                                    MASS;
-
-//                 n             +=  ((1.0)/(pj.density)) *
-//                                    (double)SPIKY_GRAD * pow(kernelRadiusH - r, 3.0) *
-//                                    MASS;
-
-//                 surfaceTensionForce +=  ((1.0)/(pj.density)) *
-//                                    (double)VISC_LAP * (kernelRadiusH - r) *
-//                                    MASS;
+                 viscosityForce +=  ((pj.velocity -  pi.velocity)/pj.density) *
+                                    VISC_LAP * (kernelRadiusH - r) *
+                                     MASS;
 
                  n             +=  ((1.0)/(pj.density)) *
-                                    (double)POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) * rLen *
+                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *glm::normalize(rLen) *
                                     MASS;
 
                  surfaceTensionForce +=  ((1.0)/(pj.density)) *
-                                    (double)POLY6_LAP * (kernelRadiusH*kernelRadiusH - r*r) *
-                                    (r*r - 0.75*kernelRadiusH*kernelRadiusH) *
-                                    MASS;
+                                        POLY6_LAP * (kernelRadiusH*kernelRadiusH - r*r) * (3.0*kernelRadiusH*kernelRadiusH - 7.0*r*r) *
+                                        MASS;
              }
          }
 
          glm::dvec2 gravityForce(G * MASS);
          viscosityForce *= viscosityConstant;
-         surfaceTensionForce *= -1.0*SURFACE_TENSION_CONSTANT * (n/glm::normalize(n)) ;
-         pi.force =  (gravityForce + pressureForce + viscosityForce ) / pi.density  ;
+         surfaceTensionForce *= -1.0*SURFACE_TENSION_CONSTANT * (n/glm::length(n)) ;
+
+//          double THEONE = glm::length(n);
+        if ( i==int(particles.size()/2.0) ){
+            cout<<"Surface Tension Force: "<<surfaceTensionForce.x<<" "<<surfaceTensionForce.y<<endl;
+            cout<<"n: "<<n.x<<" "<<n.y<<endl;
+             cout<<"n length: "<<glm::length(n)<<endl;
+             cout<<bool(isnan(surfaceTensionForce.x))<<endl;
+             cout<<bool(isnan(n.x))<<endl;
+        }
+
+         if (!isnan(surfaceTensionForce.x)){
+
+             viscosityForce += surfaceTensionForce;
+          }
+
+         pi.force =  (gravityForce + pressureForce + viscosityForce) / pi.density  ;
+         i++;
     }
 }
 
@@ -421,7 +434,7 @@ void Fluid::integrate(double dt, double damp,bool first)
 {
     for (auto &p : particles) {
 
-        p.velocity += 0.5*dt * p.force / p.density;
+        p.velocity += 0.5*dt * (p.force / p.density);
         if (first){
             p.position += p.velocity * dt;
 
