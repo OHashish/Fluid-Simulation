@@ -20,6 +20,7 @@ public slots:
 
     void updateTime();
     void posX(double);
+    void SS1();
     void SS2();
     void SS3();
     void moveUp();

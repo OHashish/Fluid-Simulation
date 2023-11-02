@@ -132,6 +132,12 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
     windowLayoutUI->addWidget(S3);
 
+    QCheckBox *visSur = new QCheckBox("Visualize Surface",this);
+    visSur->setMaximumWidth(400);
+    visSur->setCheckable(true);
+    visSur->setCheckState(Qt::Unchecked);
+    connect(visSur,SIGNAL(released()), reader, SLOT(SS1()));
+    windowLayoutUI->addWidget(visSur);
 
     TriangularButton *downArrow = new TriangularButton("",this,0);
     downArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
@@ -179,6 +185,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     everything->addLayout(downBox);
 
     windowLayoutUI->addLayout(everything);
+
 
 } // constructor
 

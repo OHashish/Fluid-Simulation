@@ -19,6 +19,7 @@
 double framespeed = 0;
 bool toggleViscosity = true;
 bool toggleSurfaceTension = true;
+bool visualizeSurface = false;
 bool toggleSS4 = 0;
 bool toggleSS5 = 0;
 
@@ -130,10 +131,9 @@ void Fluid::paintGL(){
         glColor3f(1.0f,1.0f,1.0f);
         glNormal3f(0,0,1);
         glVertex3f(0,-0.05,0);
-        glVertex3f(0,5-0.05,0);
-        glVertex3f(-0.1,5-0.05,0);
+        glVertex3f(0,7-0.05,0);
+        glVertex3f(-0.1,7-0.05,0);
         glVertex3f(-0.1,0-0.05,0);
-
         glEnd();
 
         //Bottom
@@ -151,8 +151,8 @@ void Fluid::paintGL(){
         glColor3f(1.0f,1.0f,1.0f);
         glNormal3f(0,0,1);
         glVertex3f(5,0-0.05,0);
-        glVertex3f(5,5-0.05,0);
-        glVertex3f(5.1,5-0.05,0);
+        glVertex3f(5,7-0.05,0);
+        glVertex3f(5.1,7-0.05,0);
         glVertex3f(5.1,0-0.05,0);
         glEnd();
 
@@ -175,10 +175,8 @@ void Fluid::paintGL(){
             gluQuadricNormals( quadric, GLU_SMOOTH);
             gluQuadricOrientation( quadric,GLU_OUTSIDE);
 
-//            glColor3f(0.0f,1.0f,0.0f);
-
             for ( auto& p : particles){
-                glColor3f(1.0f,p.color,0.0f);
+                glColor3f(0.0f,p.color,0.8f);
                 glPushMatrix();
                     glTranslatef(p.position.x, p.position.y, 0);
                     gluDisk(quadric, 0, PARTICLE_RADIUS, 20, 10);
@@ -197,7 +195,7 @@ void Fluid::addParticle(double i, double j){
         glm::dvec2(0, -10.0), // Force
         0.0, // Density
         0.0, // Pressure
-        1.0,
+        1.0, // Color
     };
 
     particles.push_back(p);
@@ -281,6 +279,13 @@ void Fluid::DAMP(double k){
     VELOCITY_DAMP=k;
     this->repaint();
 }
+void Fluid::SS1(){
+    visualizeSurface= !visualizeSurface;
+    Clear();
+    blobCreator();
+}
+
+
 void Fluid::SS2(){
 
     toggleViscosity= !toggleViscosity;
@@ -296,8 +301,8 @@ void Fluid::SS3(){
 }
 
 void Fluid::moveUp(){
-    if (verticalPos < -0.5)
-        verticalPos += 0.2;
+//    if (verticalPos < -0.5)
+     verticalPos += 0.2;
     Clear();
     blobCreator();
 }
@@ -346,7 +351,6 @@ void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, doub
 }
 
 void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, double surfaceConstant){
-    int i =0;
     for (auto &pi : particles) {
         glm::dvec2 pressureForce(0,0);
         glm::dvec2 viscosityForce(0,0);
@@ -383,21 +387,25 @@ void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, doub
 
         glm::dvec2 gravityForce(G * MASS);
         viscosityForce *= viscosityConstant;
-        surfaceTensionForce *= -1.0*surfaceConstant * (n/glm::length(n)) ;
-        if (i==1)
-        cout<<glm::length(n)<<endl;
+        double nMagnitude = glm::length(n);
+        surfaceTensionForce *= -1.0*surfaceConstant * (n/nMagnitude) ;
+
         if (toggleViscosity){
             gravityForce += viscosityForce;
         }
         if (!isnan(surfaceTensionForce.x) && toggleSurfaceTension){
             gravityForce += surfaceTensionForce;
         }
-        if(glm::length(n)<0.2)
-            pi.color = 1.0;
-        else
-            pi.color = 0.0;
+
+        if (visualizeSurface){
+            if(nMagnitude < 0.2){
+                pi.color = nMagnitude/0.2;
+            }else{
+                pi.color = 0.0;
+            }
+        }
+
         pi.force =  (gravityForce + pressureForce) / pi.density  ;
-        i++;
     }
 }
 
@@ -409,28 +417,32 @@ void Fluid::integrate(double dt, double damp,bool first){
         if (first){
             p.position += p.velocity * dt;
 
-            //        if (glm::length(p.velocity) > 1.0){
-            //            p.velocity *= damp;
-            //        }
+            //Left Barrier
             if (p.position.x - EPS < -0.95){
                 p.velocity.x *= -damp;
                 p.position.x = -0.95 + EPS;
             }
+
+            //Right Barrier
             if (p.position.x + EPS > 3.95){
 
                 p.velocity.x *= -damp;
                 p.position.x = 3.95 - EPS;
             }
+
+            //Ground
             if (p.position.y - EPS < -4.0){
 
                 p.velocity.y *= -damp;
                 p.position.y = -4.0 + EPS;
             }
-            if (p.position.y + EPS > 3.0){
 
-                p.velocity.y *= -damp;
-                p.position.y = 3.0 - EPS;
-            }
+            //Ceiling
+//            if (p.position.y + EPS > 3.0){
+
+//                p.velocity.y *= -damp;
+//                p.position.y = 3.0 - EPS;
+//            }
         }
 
     }
