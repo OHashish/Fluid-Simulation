@@ -34,12 +34,18 @@ bool toggleSS5 = 0;
 
 //float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
 //float EPS = PARTICLE_RADIUS; // boundary epsilon
-//// float POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
 //float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
 //float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
 //double SURFACE_TENSION_CONSTANT = 0.5;
 //double VISCOSITY_CONSTANT = 200.0;
 
+//float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
+//float POLY6_GRAD = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
+//float POLY6_LAP = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
+//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
+//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
+//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
+//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
 
 //Play
 glm::dvec2 G(0.0, -10.0);
@@ -53,14 +59,6 @@ double MASS = 2.5;
 double SURFACE_TENSION_CONSTANT = 0.9;
 double VISCOSITY_CONSTANT = 3000.0;
 float EPS = PARTICLE_RADIUS; // boundary epsilon
-
-//float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float POLY6_GRAD = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float POLY6_LAP = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
 
 double POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
 double POLY6_GRAD = -945.f / (32.0* M_PI * pow(H_KER_RAD,9.f));
@@ -93,7 +91,7 @@ void Fluid::Clear(){
 }
 void Fluid::initializeGL(){
     glEnable(GL_DEPTH_TEST);
-//    glShadeModel(GL_FLAT);
+    //    glShadeModel(GL_FLAT);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
@@ -126,95 +124,96 @@ void Fluid::paintGL(){
 
     glTranslatef(-2, -3, 0);
     glPushMatrix();
-            //Left
-            glBegin(GL_QUADS);
-            glColor3f(1.0f,1.0f,1.0f);
-              glNormal3f(0,0,1);
-                    glVertex3f(0,-0.05,0);
-                    glVertex3f(0,5-0.05,0);
-                    glVertex3f(-0.1,5-0.05,0);
-                    glVertex3f(-0.1,0-0.05,0);
+        //Left
+        glBegin(GL_QUADS);
+        glColor3f(1.0f,1.0f,1.0f);
+        glNormal3f(0,0,1);
+        glVertex3f(0,-0.05,0);
+        glVertex3f(0,5-0.05,0);
+        glVertex3f(-0.1,5-0.05,0);
+        glVertex3f(-0.1,0-0.05,0);
 
-            glEnd();
+        glEnd();
 
-            //Bottom
-            glBegin(GL_QUADS);
-            glColor3f(1.0f,1.0f,1.0f);
-             glNormal3f(0,0,1);
-                    glVertex3f(-0.1,-0.05,0);
-                    glVertex3f(5.1,-0.05,0);
-                    glVertex3f(5.1,-0.15,0);
-                    glVertex3f(-0.1,-0.15,0);
-            glEnd();
+        //Bottom
+        glBegin(GL_QUADS);
+        glColor3f(1.0f,1.0f,1.0f);
+        glNormal3f(0,0,1);
+        glVertex3f(-0.1,-0.05,0);
+        glVertex3f(5.1,-0.05,0);
+        glVertex3f(5.1,-0.15,0);
+        glVertex3f(-0.1,-0.15,0);
+        glEnd();
 
-            //Right
-            glBegin(GL_QUADS);
-            glColor3f(1.0f,1.0f,1.0f);
-             glNormal3f(0,0,1);
-                    glVertex3f(5,0-0.05,0);
-                    glVertex3f(5,5-0.05,0);
-                    glVertex3f(5.1,5-0.05,0);
-                    glVertex3f(5.1,0-0.05,0);
-            glEnd();
+        //Right
+        glBegin(GL_QUADS);
+        glColor3f(1.0f,1.0f,1.0f);
+        glNormal3f(0,0,1);
+        glVertex3f(5,0-0.05,0);
+        glVertex3f(5,5-0.05,0);
+        glVertex3f(5.1,5-0.05,0);
+        glVertex3f(5.1,0-0.05,0);
+        glEnd();
 
-            //Ground
-            glBegin(GL_QUADS);
-            glColor3f(0.0f,0.0f,1.0f);
-             glNormal3f(0,0,1);
-                 glVertex3f(-20,-0.15,0);
-                 glVertex3f(20,-0.15,0);
-                 glVertex3f(20,-0.25,0);
-                 glVertex3f(-20,-0.25,0);
-            glEnd();
+        //Ground
+        glBegin(GL_QUADS);
+        glColor3f(0.0f,0.0f,1.0f);
+        glNormal3f(0,0,1);
+        glVertex3f(-20,-0.15,0);
+        glVertex3f(20,-0.15,0);
+        glVertex3f(20,-0.25,0);
+        glVertex3f(-20,-0.25,0);
+        glEnd();
 
 
-            // example of disk
-         glPushMatrix();
-          glTranslatef(1, 4, 0);
-          GLUquadricObj *quadric= gluNewQuadric();
-          gluQuadricDrawStyle( quadric, GLU_FILL);
-          gluQuadricNormals( quadric, GLU_SMOOTH);
-          gluQuadricOrientation( quadric,GLU_OUTSIDE);
+        // example of disk
+        glPushMatrix();
+            glTranslatef(1, 4, 0);
+            GLUquadricObj *quadric= gluNewQuadric();
+            gluQuadricDrawStyle( quadric, GLU_FILL);
+            gluQuadricNormals( quadric, GLU_SMOOTH);
+            gluQuadricOrientation( quadric,GLU_OUTSIDE);
 
-          glColor3f(0.0f,1.0f,0.0f);
+//            glColor3f(0.0f,1.0f,0.0f);
 
-                 for ( auto& p : particles){
-                     glPushMatrix();
-                        glTranslatef(p.position.x, p.position.y, 0);
-                        gluDisk(quadric, 0, PARTICLE_RADIUS, 20, 10);
-                    glPopMatrix();
-                 }
-
+            for ( auto& p : particles){
+                glColor3f(1.0f,p.color,0.0f);
+                glPushMatrix();
+                    glTranslatef(p.position.x, p.position.y, 0);
+                    gluDisk(quadric, 0, PARTICLE_RADIUS, 20, 10);
+                glPopMatrix();
+            }
         glPopMatrix();
 
     glPopMatrix();
 
 }
 
-void Fluid::addParticle(double i, double j)
-{
+void Fluid::addParticle(double i, double j){
     Particle p = {
         glm::dvec2(i, j), // Position
         glm::dvec2(0, 0), // Velocity
         glm::dvec2(0, -10.0), // Force
         0.0, // Density
         0.0, // Pressure
+        1.0,
     };
 
     particles.push_back(p);
 }
 
 void Fluid::blobCreator(){
-    GLUquadricObj *quadric= gluNewQuadric();
-    gluQuadricDrawStyle( quadric, GLU_FILL);
-    gluQuadricNormals( quadric, GLU_SMOOTH);
-    gluQuadricOrientation( quadric,GLU_OUTSIDE);
-    glColor3f(0.0f,1.0f,0.0f);
-       for ( double i = 0 ; i < 2;i+=PARTICLE_RADIUS*2){
-           for ( double j = 0 ; j < 3;j+=PARTICLE_RADIUS*2){
-               addParticle(i, j-3);
-           }
-       }
+    for ( double i = 0 ; i < 2;i+=PARTICLE_RADIUS*2){
+        for ( double j = 0 ; j < 3;j+=PARTICLE_RADIUS*2){
+            addParticle(i, j-3);
+        }
+    }
+
+//    for (int i = 0; i < 2 / (PARTICLE_RADIUS * 2); ++i) {
+//        for (int j = 0; j < 3 / (PARTICLE_RADIUS * 2); ++j) {
+//            addParticle(i * PARTICLE_RADIUS * 2, j * PARTICLE_RADIUS * 2 - 3);
+//        }
+//    }
 
 }
 
@@ -284,7 +283,6 @@ void Fluid::DAMP(double k){
 void Fluid::SS2(){
 
     toggleViscosity= !toggleViscosity;
-    cout<<toggleViscosity<<endl;
     Clear();
     blobCreator();
 }
@@ -324,15 +322,14 @@ void Fluid::SS5(){
     blobCreator();
 }
 
-double Fluid::computePoly6Kernel(double r, double h) {
+double Fluid::computePoly6Kernel(double r, double h){
     if (r > h || r < 0)  return 0;
 
     double q = pow(h, 2) - pow(r, 2);
     return POLY6 * pow(q, 3);
 }
 
-void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, double restDensity)
-{
+void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, double restDensity){
     for (auto &pi : particles) {
         pi.density = 0.0;
         for (auto &pj : particles) {
@@ -347,78 +344,73 @@ void Fluid::calculatePressureDensity(double kernelRadiusH, double contantK, doub
     }
 }
 
-void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, double surfaceConstant)
-{
-    int i = 0;
+void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, double surfaceConstant){
+    int i =0;
     for (auto &pi : particles) {
-         glm::dvec2 pressureForce(0,0);
-         glm::dvec2 viscosityForce(0,0);
-         glm::dvec2 surfaceTensionForce(0,0);
-         glm::dvec2 n(0,0);
+        glm::dvec2 pressureForce(0,0);
+        glm::dvec2 viscosityForce(0,0);
+        glm::dvec2 surfaceTensionForce(0,0);
+        glm::dvec2 n(0,0);
 
+        for (auto &pj : particles) {
+            if (&pi == &pj) continue;
 
-         for (auto &pj : particles) {
-             if (&pi == &pj) continue;
-
-             glm::dvec2 rLen(pj.position - pi.position);
-             double r = glm::length(rLen);
-             if (r < kernelRadiusH){
-                 pressureForce +=  ((pj.pressure +  pi.pressure)/(2.0*pj.density)) *
+            glm::dvec2 rLen(pj.position - pi.position);
+            double r = glm::length(rLen);
+            if (r < kernelRadiusH){
+                pressureForce +=  ((pj.pressure +  pi.pressure)/(2.0*pj.density)) *
                                     SPIKY_GRAD * pow(kernelRadiusH - r, 2.0) *
-//                                    POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
+                                    // POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
                                     -1.0*glm::normalize(rLen)  *
                                     MASS;
 
-                 viscosityForce +=  ((pj.velocity -  pi.velocity)/pj.density) *
+                viscosityForce +=  ((pj.velocity -  pi.velocity)/pj.density) *
                                     VISC_LAP * (kernelRadiusH - r) *
-                                     MASS;
+                                    MASS;
 
-                 n             +=  ((1.0)/(pj.density)) *
+                n             +=  ((1.0)/(pj.density)) *
                                     POLY6_GRAD * pow(kernelRadiusH*kernelRadiusH - r*r,2) *
                                     glm::normalize(rLen) *
                                     MASS;
 
-                 surfaceTensionForce +=  ((1.0)/(pj.density)) *
-                                        POLY6_LAP * (kernelRadiusH*kernelRadiusH - r*r) * (3.0*kernelRadiusH*kernelRadiusH - 7.0*r*r) *
-                                        MASS;
-             }
-         }
+                surfaceTensionForce +=  ((1.0)/(pj.density)) *
+                                    POLY6_LAP * (kernelRadiusH*kernelRadiusH - r*r) *
+                                    (3.0*kernelRadiusH*kernelRadiusH - 7.0*r*r) *
+                                    MASS;
+            }
+        }
 
-         glm::dvec2 gravityForce(G * MASS);
-         viscosityForce *= viscosityConstant;
-         surfaceTensionForce *= -1.0*surfaceConstant * (n/glm::length(n)) ;
-
-//         if ( i==int(particles.size()/2.0) ){
-//             cout<<"Surface Tension Force: "<<surfaceTensionForce.x<<" "<<surfaceTensionForce.y<<endl;
-//             cout<<"n: "<<n.x<<" "<<n.y<<endl;
-//             cout<<"n length: "<<glm::length(n)<<endl;
-//             cout<<bool(isnan(surfaceTensionForce.x))<<endl;
-//             cout<<bool(isnan(n.x))<<endl;
-//         }
-
-         if (toggleViscosity){
-             gravityForce += viscosityForce;
-         }
-         if (!isnan(surfaceTensionForce.x) && toggleSurfaceTension){
-                 gravityForce += surfaceTensionForce;
-         }
-
-         pi.force =  (gravityForce + pressureForce) / pi.density  ;
-         i++;
+        glm::dvec2 gravityForce(G * MASS);
+        viscosityForce *= viscosityConstant;
+        surfaceTensionForce *= -1.0*surfaceConstant * (n/glm::length(n)) ;
+        if (i==1)
+        cout<<glm::length(n)<<endl;
+        if (toggleViscosity){
+            gravityForce += viscosityForce;
+        }
+        if (!isnan(surfaceTensionForce.x) && toggleSurfaceTension){
+            gravityForce += surfaceTensionForce;
+        }
+        if(glm::length(n)<0.2)
+            pi.color = 1.0;
+        else
+            pi.color = 0.0;
+        pi.force =  (gravityForce + pressureForce) / pi.density  ;
+        i++;
     }
 }
 
-void Fluid::integrate(double dt, double damp,bool first)
-{
+void Fluid::integrate(double dt, double damp,bool first){
+
     for (auto &p : particles) {
 
         p.velocity += 0.5*dt * (p.force / p.density);
         if (first){
             p.position += p.velocity * dt;
 
-    //        if (glm::length(p.velocity) > 1.0){
-    //            p.velocity *= damp;
-    //        }
+            //        if (glm::length(p.velocity) > 1.0){
+            //            p.velocity *= damp;
+            //        }
             if (p.position.x - EPS < -0.95){
                 p.velocity.x *= -damp;
                 p.position.x = -0.95 + EPS;
@@ -443,13 +435,12 @@ void Fluid::integrate(double dt, double damp,bool first)
     }
 }
 
-void Fluid::simulateFluid(double supportRadius, double dt , double restDensity , double stiffness , double viscosityConstant , double damp , double surfaceConstant) {
+void Fluid::simulateFluid(double kernelRadiusH, double dt , double restDensity , double gasConstant , double viscosityConstant , double damp , double surfaceConstant){
 
-    calculatePressureDensity(supportRadius, stiffness, restDensity);
-    calculateForces(supportRadius, viscosityConstant, surfaceConstant);
+    calculatePressureDensity(kernelRadiusH, gasConstant, restDensity);
+    calculateForces(kernelRadiusH, viscosityConstant, surfaceConstant);
     integrate(dt, damp,true);
-    calculatePressureDensity(supportRadius, stiffness, restDensity);
-    calculateForces(supportRadius, viscosityConstant, surfaceConstant);
+    calculatePressureDensity(kernelRadiusH, gasConstant, restDensity);
+    calculateForces(kernelRadiusH, viscosityConstant, surfaceConstant);
     integrate(dt, damp,false);
-
 }

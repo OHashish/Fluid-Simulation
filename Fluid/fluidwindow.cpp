@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QToolButton>
 #include <QTransform>
+
 // constructor / destructor
 FluidWindow::FluidWindow(QWidget *parent)
     : QWidget(parent)
@@ -23,10 +24,7 @@ FluidWindow::FluidWindow(QWidget *parent)
 
     windowLayouttest= new QVBoxLayout(this);
 
-
-
     Fluid* reader = new Fluid(NULL);
-
 
     windowLayoutMain->addWidget(reader);
     windowLayoutMain->addLayout(windowLayoutUI);
@@ -120,22 +118,10 @@ FluidWindow::FluidWindow(QWidget *parent)
     windowLayouttest->addWidget(dd);
     connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(DAMP(double)));
 
-//    QPushButton *S2 = new QPushButton("Toggle Viscosity",this);
-//    S2->setMaximumWidth(400);
-//    connect(S2,SIGNAL(released()), reader, SLOT(SS2()));
-//    windowLayoutUI->addWidget(S2);
-
-//    QPushButton *S3 = new QPushButton("Toggle Surface Tension",this);
-//    S3->setMaximumWidth(400);
-//    connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
-//    windowLayoutUI->addWidget(S3);
-
     QCheckBox *S2 = new QCheckBox("Toggle Viscosity", this);
     S2->setMaximumWidth(400);
     S2->setCheckable(true);
     S2->setCheckState(Qt::Checked);
-//    S2->setLayoutDirection(Qt::RightToLeft);
-//    S2->setStyleSheet("padding-right: 25%;");
     connect(S2,SIGNAL(released()), reader, SLOT(SS2()));
     windowLayoutUI->addWidget(S2);
 
@@ -143,17 +129,25 @@ FluidWindow::FluidWindow(QWidget *parent)
     S3->setMaximumWidth(400);
     S3->setCheckable(true);
     S3->setCheckState(Qt::Checked);
-//    S3->setLayoutDirection(Qt::RightToLeft);
     connect(S3,SIGNAL(released()), reader, SLOT(SS3()));
     windowLayoutUI->addWidget(S3);
 
 
-    TriangularButton *S5 = new TriangularButton("",this);
-    S5->setLayoutDirection(Qt::RightToLeft);
+    TriangularButton *S5 = new TriangularButton("",this,270);
     S5->setStyleSheet("background-color: rgb(101, 101, 101);");
+    S5->setMaximumWidth(50);
     S5->setMaximumWidth(50);
     connect(S5,SIGNAL(released()), reader, SLOT(SS5()));
     windowLayoutUI->addWidget(S5);
+
+
+    TriangularButton *S4 = new TriangularButton("",this,90);
+    S4->setStyleSheet("background-color: rgb(101, 101, 101);");
+    S4->setMaximumWidth(50);
+    S4->setMaximumWidth(50);
+    connect(S4,SIGNAL(released()), reader, SLOT(SS4()));
+    windowLayoutUI->addWidget(S4);
+
 
 
 } // constructor
@@ -165,7 +159,4 @@ FluidWindow::~FluidWindow()
 } // destructor
 
 void FluidWindow::handleButton(){
-    //    FluidWindow* window = new FluidWindow(NULL);
-    qDebug()<<"BENAS";
-
 }

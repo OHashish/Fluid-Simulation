@@ -1,7 +1,5 @@
-#pragma warning(disable: 4018)
 #ifndef  _FLUID_H_
 #define  _FLUID_H_
-
 
 #include <vector>
 #include <map>
@@ -15,25 +13,24 @@
 
 using namespace  std;
 
-class  Fluid: public QGLWidget
-{
+class  Fluid: public QGLWidget{
 
-Q_OBJECT
+    Q_OBJECT
 public slots:
 
-void updateTime();
-void posX(double);
-void SS2();
-void SS3();
-void SS4();
-void SS5();
-void gasConstant(double k);
+    void updateTime();
+    void posX(double);
+    void SS2();
+    void SS3();
+    void SS4();
+    void SS5();
+    void gasConstant(double k);
 
-void vCONSTANT(double k);
-void kRADIUS(double k);
-void surfaceTESNION(double k);
-void deltaTIME(double k);
-void DAMP(double k);
+    void vCONSTANT(double k);
+    void kRADIUS(double k);
+    void surfaceTESNION(double k);
+    void deltaTIME(double k);
+    void DAMP(double k);
 public:
     Fluid();
     Fluid( QWidget *parent);
@@ -54,6 +51,7 @@ public:
         glm::dvec2 force;
         double density;
         double pressure;
+        double color;
     };
 
     vector<Particle> particles;
