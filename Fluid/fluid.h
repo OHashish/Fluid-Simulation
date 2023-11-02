@@ -19,7 +19,7 @@ class  Fluid: public QGLWidget{
 public slots:
 
     void updateTime();
-    void posX(double);
+    void changeRestDensity(double);
     void SS1();
     void SS2();
     void SS3();
@@ -27,13 +27,13 @@ public slots:
     void moveDown();
     void moveRight();
     void moveLeft();
-    void gasConstant(double k);
+    void changeGasConstant(double k);
 
-    void vCONSTANT(double k);
-    void kRADIUS(double k);
-    void surfaceTESNION(double k);
-    void deltaTIME(double k);
-    void DAMP(double k);
+    void changeViscosityConstant(double k);
+    void changeKernelRadius(double k);
+    void changeSurfaceTension(double k);
+    void changeTime(double k);
+    void changeDamp(double k);
 public:
     Fluid();
     Fluid( QWidget *parent);

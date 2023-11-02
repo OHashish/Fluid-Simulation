@@ -41,7 +41,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     px->setValue(700);
     px->setSingleStep(50);
     windowLayouttest->addWidget(px);
-    connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(posX(double)));
+    connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(changeRestDensity(double)));
 
     QLabel *g = new QLabel("Gas Constant");
     g->setMaximumHeight(10);
@@ -54,7 +54,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     k->setValue(900);
     k->setSingleStep(50);
     windowLayouttest->addWidget(k);
-    connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(gasConstant(double)));
+    connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(changeGasConstant(double)));
 
     QLabel *v = new QLabel("Viscosity Constant");
     v->setMaximumHeight(10);
@@ -67,7 +67,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     vc->setValue(3000);
     vc->setSingleStep(100);
     windowLayouttest->addWidget(vc);
-    connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(vCONSTANT(double)));
+    connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(changeViscosityConstant(double)));
 
 //    QLabel *r = new QLabel("Kernel Radius");
 //    r->setMaximumHeight(10);
@@ -79,7 +79,7 @@ FluidWindow::FluidWindow(QWidget *parent)
 //    kr->setMaximum(5000);
 //    kr->setValue(1.5);
 //    windowLayouttest->addWidget(kr);
-//    connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(kRADIUS(double)));
+//    connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(changeKernelRadius(double)));
 
     QLabel *s = new QLabel("Surface Tension Constant");
     s->setMaximumHeight(10);
@@ -88,11 +88,11 @@ FluidWindow::FluidWindow(QWidget *parent)
     st->setMaximumWidth(80);
     st->setMaximumHeight(30);
     st->setMinimum(0);
-    st->setMaximum(50000);
-    st->setSingleStep(100);
+    st->setMaximum(1);
+    st->setSingleStep(0.1);
     st->setValue(0.9);
     windowLayouttest->addWidget(st);
-    connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(surfaceTESNION(double)));
+    connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(changeSurfaceTension(double)));
 
     QLabel *d = new QLabel("Delta Time");
     d->setMaximumHeight(10);
@@ -101,12 +101,12 @@ FluidWindow::FluidWindow(QWidget *parent)
     dt->setMaximumWidth(80);
     dt->setMaximumHeight(30);
     dt->setMinimum(0);
-    dt->setMaximum(1);
+    dt->setMaximum(1.0);
     dt->setDecimals(3);
     dt->setSingleStep(0.05);
     dt->setValue(0.3);
     windowLayouttest->addWidget(dt);
-    connect(dt, SIGNAL(valueChanged(double)),  reader  , SLOT(deltaTIME(double)));
+    connect(dt, SIGNAL(valueChanged(double)),  reader  , SLOT(changeTime(double)));
 
     QLabel *dl = new QLabel("Damp");
     dl->setMaximumHeight(10);
@@ -120,7 +120,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     dd->setSingleStep(0.1);
     dd->setValue(0.5);
     windowLayouttest->addWidget(dd);
-    connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(DAMP(double)));
+    connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(changeDamp(double)));
 
     QCheckBox *S2 = new QCheckBox("Toggle Viscosity", this);
     S2->setMaximumWidth(400);

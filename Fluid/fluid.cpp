@@ -16,12 +16,9 @@
 #include <QMouseEvent>
 #include <iostream>
 
-double framespeed = 0;
 bool toggleViscosity = true;
 bool toggleSurfaceTension = true;
 bool visualizeSurface = false;
-bool toggleSS4 = 0;
-bool toggleSS5 = 0;
 
 //Default
 //glm::dvec2 G(0.0, -10.0);
@@ -40,25 +37,17 @@ bool toggleSS5 = 0;
 //double SURFACE_TENSION_CONSTANT = 0.5;
 //double VISCOSITY_CONSTANT = 200.0;
 
-//float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float POLY6_GRAD = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float POLY6_LAP = -24.f / (M_PI * pow(H_KER_RAD, 8.f));
-//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
-//float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
-
 //Play
 glm::dvec2 G(0.0, -10.0);
 double REST_DENSITY = 700.0;
 double DT = 0.3;
 double PARTICLE_RADIUS = 0.09;
-double GAS_CONSTANT = 800.0; //500 with Poly in pressure
+double GAS_CONSTANT = 800.0; // 500 with Poly in pressure
 double H_KER_RAD = PARTICLE_RADIUS*2.01;
 double VELOCITY_DAMP = 0.5;
 double MASS = 2.5;
 double SURFACE_TENSION_CONSTANT = 0.9;
-double VISCOSITY_CONSTANT = 3000.0;
+double VISCOSITY_CONSTANT = 7000.0;
 float EPS = PARTICLE_RADIUS; // boundary epsilon
 
 double POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
@@ -68,12 +57,14 @@ double POLY6_LAP = -945.f / (8.0 * M_PI * pow(H_KER_RAD, 9.f));
 double SPIKY_GRAD = -45.f / (M_PI * pow(H_KER_RAD, 6.f));
 double VISC_LAP = 45.f / (M_PI * pow(H_KER_RAD, 6.f));
 
-
+//Part Rad --- Rest Desnity -- Gas Const -- DT
+//0.06 --- 2300 -- 2300 -- 0.8
+//0.08 --- 1000 -- 1250 -- 0.3
+//0.09 --- 700 -- 800 -- 0.3
 Fluid::Fluid(){
     horizontalPos = 0.f;
     verticalPos = 0.f;
 }
-
 
 Fluid::Fluid(QWidget *parent) : QGLWidget(parent){
     QTimer *ptimer = new QTimer(this);
@@ -195,9 +186,8 @@ void Fluid::addParticle(double i, double j){
         glm::dvec2(0, -10.0), // Force
         0.0, // Density
         0.0, // Pressure
-        1.0, // Color
+        0.0, // Color
     };
-
     particles.push_back(p);
 }
 
@@ -210,7 +200,7 @@ void Fluid::blobCreator(){
 
 //    for (int i = 0; i < 2 / (PARTICLE_RADIUS * 2); ++i) {
 //        for (int j = 0; j < 3 / (PARTICLE_RADIUS * 2); ++j) {
-//            addParticle(i * PARTICLE_RADIUS * 2, j * PARTICLE_RADIUS * 2 - 3);
+//            addParticle(i * PARTICLE_RADIUS * 2, j * PARTICLE_RADIUS * 2);
 //        }
 //    }
 
@@ -231,64 +221,55 @@ void Fluid::updateTime(){
 
 }
 
-void Fluid::posX(double pos){
+void Fluid::changeRestDensity(double k){
+    REST_DENSITY = k;
     Clear();
     blobCreator();
-    REST_DENSITY=pos;
-    this->repaint();
 }
 
-void Fluid::gasConstant(double k){
+void Fluid::changeGasConstant(double k){
+    GAS_CONSTANT = k;
     Clear();
     blobCreator();
-    GAS_CONSTANT=k;
-    this->repaint();
 }
 
-void Fluid::vCONSTANT(double k){
+void Fluid::changeViscosityConstant(double k){
+    VISCOSITY_CONSTANT = k;
     Clear();
     blobCreator();
-    VELOCITY_DAMP=k;
-    this->repaint();
 }
 
-void Fluid::kRADIUS(double k){
+void Fluid::changeKernelRadius(double k){
+    H_KER_RAD = k;
     Clear();
     blobCreator();
-    H_KER_RAD=k;
-    this->repaint();
 }
 
-void Fluid::surfaceTESNION(double k){
+void Fluid::changeSurfaceTension(double k){
+    SURFACE_TENSION_CONSTANT = k;
     Clear();
     blobCreator();
-    SURFACE_TENSION_CONSTANT=k;
-    this->repaint();
 }
 
-void Fluid::deltaTIME(double k){
+void Fluid::changeTime(double k){
+    DT = k;
     Clear();
-    blobCreator();
-    DT=k;
-    this->repaint();
+    blobCreator();  
 }
 
-void Fluid::DAMP(double k){
+void Fluid::changeDamp(double k){
+    VELOCITY_DAMP = k;
     Clear();
     blobCreator();
-    VELOCITY_DAMP=k;
-    this->repaint();
 }
 void Fluid::SS1(){
-    visualizeSurface= !visualizeSurface;
-    Clear();
-    blobCreator();
+    visualizeSurface = !visualizeSurface;
 }
 
 
 void Fluid::SS2(){
 
-    toggleViscosity= !toggleViscosity;
+    toggleViscosity = !toggleViscosity;
     Clear();
     blobCreator();
 }
@@ -397,12 +378,10 @@ void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, doub
             gravityForce += surfaceTensionForce;
         }
 
-        if (visualizeSurface){
-            if(nMagnitude < 0.2){
-                pi.color = nMagnitude/0.2;
-            }else{
-                pi.color = 0.0;
-            }
+        if (visualizeSurface && nMagnitude < 0.1){
+            pi.color = nMagnitude/0.1;
+        }else{
+            pi.color = 0.0;
         }
 
         pi.force =  (gravityForce + pressureForce) / pi.density  ;
@@ -413,10 +392,14 @@ void Fluid::integrate(double dt, double damp,bool first){
 
     for (auto &p : particles) {
 
-        p.velocity += 0.5*dt * (p.force / p.density);
+        p.velocity += dt * (p.force / p.density);
         if (first){
-            p.position += p.velocity * dt;
 
+            p.position += p.velocity * dt*2.0;
+
+            if (glm::length(p.velocity) > 3.0){
+                p.velocity *= 0.9;
+            }
             //Left Barrier
             if (p.position.x - EPS < -0.95){
                 p.velocity.x *= -damp;
