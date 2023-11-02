@@ -59,7 +59,6 @@ QPolygonF TriangularButton::trianglePoints(int rotate){
         triangle << QPointF(width(),height());
         triangle << QPointF(width(),0);
     }else if (rotate == 180){
-//        triangle << QPointF(width(), 0);
         triangle << QPointF( width()/2,0);
         triangle << QPointF(0, height());
         triangle << QPointF(width(),height());

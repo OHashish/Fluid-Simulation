@@ -22,8 +22,10 @@ public slots:
     void posX(double);
     void SS2();
     void SS3();
-    void SS4();
-    void SS5();
+    void moveUp();
+    void moveDown();
+    void moveRight();
+    void moveLeft();
     void gasConstant(double k);
 
     void vCONSTANT(double k);
@@ -53,6 +55,8 @@ public:
         double pressure;
         double color;
     };
+
+    float horizontalPos,verticalPos;
 
     vector<Particle> particles;
 

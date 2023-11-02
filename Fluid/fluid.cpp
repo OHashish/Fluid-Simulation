@@ -69,7 +69,8 @@ double VISC_LAP = 45.f / (M_PI * pow(H_KER_RAD, 6.f));
 
 
 Fluid::Fluid(){
-
+    horizontalPos = 0.f;
+    verticalPos = 0.f;
 }
 
 
@@ -205,7 +206,7 @@ void Fluid::addParticle(double i, double j){
 void Fluid::blobCreator(){
     for ( double i = 0 ; i < 2;i+=PARTICLE_RADIUS*2){
         for ( double j = 0 ; j < 3;j+=PARTICLE_RADIUS*2){
-            addParticle(i, j-3);
+            addParticle(i+horizontalPos, j+verticalPos);
         }
     }
 
@@ -294,33 +295,33 @@ void Fluid::SS3(){
     blobCreator();
 }
 
-void Fluid::SS4(){
-    if (toggleSS4==0){
-        toggleSS4=1;
-        toggleSurfaceTension=0;
-        toggleViscosity=0;
-        toggleSS5=0;
-    }else {
-
-        toggleSS4=0;
-    }
+void Fluid::moveUp(){
+    if (verticalPos < -0.5)
+        verticalPos += 0.2;
     Clear();
     blobCreator();
 }
 
-void Fluid::SS5(){
-    if (toggleSS5==0){
-        toggleSS5=1;
-        toggleSurfaceTension=0;
-        toggleSS4=0;
-        toggleViscosity=0;
-    }else {
-
-        toggleSS5=0;
-    }
+void Fluid::moveDown(){
+    if (verticalPos > -3.8)
+        verticalPos -= 0.2;
     Clear();
     blobCreator();
 }
+
+void Fluid::moveLeft(){
+    if (horizontalPos > -0.8)
+         horizontalPos -= 0.2;
+     Clear();
+     blobCreator();
+ }
+
+ void Fluid::moveRight(){
+     if (horizontalPos < 1.8)
+        horizontalPos += 0.2;
+     Clear();
+     blobCreator();
+ }
 
 double Fluid::computePoly6Kernel(double r, double h){
     if (r > h || r < 0)  return 0;

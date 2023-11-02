@@ -133,22 +133,52 @@ FluidWindow::FluidWindow(QWidget *parent)
     windowLayoutUI->addWidget(S3);
 
 
-    TriangularButton *S5 = new TriangularButton("",this,270);
-    S5->setStyleSheet("background-color: rgb(101, 101, 101);");
-    S5->setMaximumWidth(50);
-    S5->setMaximumWidth(50);
-    connect(S5,SIGNAL(released()), reader, SLOT(SS5()));
-    windowLayoutUI->addWidget(S5);
+    TriangularButton *downArrow = new TriangularButton("",this,0);
+    downArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
+    downArrow->setMaximumWidth(25);
+    downArrow->setMaximumHeight(25);
+    connect(downArrow,SIGNAL(released()), reader, SLOT(moveDown()));
 
+    TriangularButton *leftArrow = new TriangularButton("",this,90);
+    leftArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
+    leftArrow->setMaximumWidth(50);
+    leftArrow->setMaximumHeight(25);
+    connect(leftArrow,SIGNAL(released()), reader, SLOT(moveLeft()));
 
-    TriangularButton *S4 = new TriangularButton("",this,90);
-    S4->setStyleSheet("background-color: rgb(101, 101, 101);");
-    S4->setMaximumWidth(50);
-    S4->setMaximumWidth(50);
-    connect(S4,SIGNAL(released()), reader, SLOT(SS4()));
-    windowLayoutUI->addWidget(S4);
+    TriangularButton *rightArrow = new TriangularButton("",this,270);
+    rightArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
+    rightArrow->setMaximumWidth(50);
+    rightArrow->setMaximumHeight(25);
+    connect(rightArrow,SIGNAL(released()), reader, SLOT(moveRight()));
 
+    TriangularButton *upArrow = new TriangularButton("",this,180);
+    upArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
+    upArrow->setMaximumWidth(25);
+    upArrow->setMaximumHeight(25);
+    connect(upArrow,SIGNAL(released()), reader, SLOT(moveUp()));
 
+    QHBoxLayout *upBox = new QHBoxLayout(this);
+    upBox->addWidget(upArrow);
+
+    QHBoxLayout *leftRightBox = new QHBoxLayout(this);
+    leftRightBox->addWidget(leftArrow);
+    leftRightBox->setSpacing(40);
+    leftRightBox->addWidget(rightArrow);
+
+    QHBoxLayout *downBox = new QHBoxLayout(this);
+    downBox->addWidget(downArrow);
+
+    QLabel *buttonsLabel = new QLabel("Move blob",this);
+    buttonsLabel->setMaximumHeight(20);
+    buttonsLabel->setAlignment(Qt::AlignCenter);
+
+    QVBoxLayout *everything = new QVBoxLayout(this);
+    everything->addWidget(buttonsLabel);
+    everything->addLayout(upBox);
+    everything->addLayout(leftRightBox);
+    everything->addLayout(downBox);
+
+    windowLayoutUI->addLayout(everything);
 
 } // constructor
 
