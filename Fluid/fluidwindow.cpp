@@ -36,9 +36,10 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *px = new QDoubleSpinBox;
     px->setMaximumWidth(80);
     px->setMaximumHeight(30);
-    px->setMinimum(-360);
+    px->setMinimum(0);
     px->setMaximum(5000);
-    px->setValue(20);
+    px->setValue(700);
+    px->setSingleStep(50);
     windowLayouttest->addWidget(px);
     connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(posX(double)));
 
@@ -48,9 +49,10 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *k = new QDoubleSpinBox;
     k->setMaximumWidth(80);
     k->setMaximumHeight(30);
-    k->setMinimum(-360);
+    k->setMinimum(0);
     k->setMaximum(5000);
-    k->setValue(3);
+    k->setValue(900);
+    k->setSingleStep(50);
     windowLayouttest->addWidget(k);
     connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(gasConstant(double)));
 
@@ -60,23 +62,24 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *vc = new QDoubleSpinBox;
     vc->setMaximumWidth(80);
     vc->setMaximumHeight(30);
-    vc->setMinimum(-360);
-    vc->setMaximum(5000);
-    vc->setValue(7);
+    vc->setMinimum(0);
+    vc->setMaximum(10000);
+    vc->setValue(3000);
+    vc->setSingleStep(100);
     windowLayouttest->addWidget(vc);
     connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(vCONSTANT(double)));
 
-    QLabel *r = new QLabel("Kernel Radius");
-    r->setMaximumHeight(10);
-    windowLayouttest->addWidget(r);
-    QDoubleSpinBox *kr = new QDoubleSpinBox;
-    kr->setMaximumWidth(80);
-    kr->setMaximumHeight(30);
-    kr->setMinimum(-360);
-    kr->setMaximum(5000);
-    kr->setValue(1.5);
-    windowLayouttest->addWidget(kr);
-    connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(kRADIUS(double)));
+//    QLabel *r = new QLabel("Kernel Radius");
+//    r->setMaximumHeight(10);
+//    windowLayouttest->addWidget(r);
+//    QDoubleSpinBox *kr = new QDoubleSpinBox;
+//    kr->setMaximumWidth(80);
+//    kr->setMaximumHeight(30);
+//    kr->setMinimum(-360);
+//    kr->setMaximum(5000);
+//    kr->setValue(1.5);
+//    windowLayouttest->addWidget(kr);
+//    connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(kRADIUS(double)));
 
     QLabel *s = new QLabel("Surface Tension Constant");
     s->setMaximumHeight(10);
@@ -84,9 +87,10 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *st = new QDoubleSpinBox;
     st->setMaximumWidth(80);
     st->setMaximumHeight(30);
-    st->setMinimum(-360);
-    st->setMaximum(5000);
-    st->setValue(10);
+    st->setMinimum(0);
+    st->setMaximum(50000);
+    st->setSingleStep(100);
+    st->setValue(0.9);
     windowLayouttest->addWidget(st);
     connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(surfaceTESNION(double)));
 
@@ -96,11 +100,11 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *dt = new QDoubleSpinBox;
     dt->setMaximumWidth(80);
     dt->setMaximumHeight(30);
-    dt->setMinimum(-360);
-    dt->setMaximum(5000);
+    dt->setMinimum(0);
+    dt->setMaximum(1);
     dt->setDecimals(3);
-    dt->setSingleStep(0.001);
-    dt->setValue(0.01);
+    dt->setSingleStep(0.05);
+    dt->setValue(0.3);
     windowLayouttest->addWidget(dt);
     connect(dt, SIGNAL(valueChanged(double)),  reader  , SLOT(deltaTIME(double)));
 
@@ -110,10 +114,10 @@ FluidWindow::FluidWindow(QWidget *parent)
     QDoubleSpinBox *dd = new QDoubleSpinBox;
     dd->setMaximumWidth(80);
     dd->setMaximumHeight(30);
-    dd->setMinimum(-360);
-    dd->setMaximum(5000);
+    dd->setMinimum(0);
+    dd->setMaximum(1);
     dd->setDecimals(2);
-    dd->setSingleStep(0.01);
+    dd->setSingleStep(0.1);
     dd->setValue(0.5);
     windowLayouttest->addWidget(dd);
     connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(DAMP(double)));

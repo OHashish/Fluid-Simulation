@@ -5,8 +5,6 @@ QT+= core gui widgets opengl
 TEMPLATE = app
 TARGET = Fluid
 INCLUDEPATH += .
-INCLUDEPATH += ../eigen-master/Eigen
-INCLUDEPATH += ../eigen-master/unsupported
 CONFIG += c++17
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
