@@ -1,21 +1,6 @@
 #include "fluidwindow.h"
-#include "fluid.h"
-#include "triangularbutton.h"
-#include <QDebug>
-#include <iostream>
-#include <QToolBar>
-#include <QPushButton>
-#include <QWindow>
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QCheckBox>
-#include <QToolButton>
-#include <QTransform>
 
-// constructor / destructor
-FluidWindow::FluidWindow(QWidget *parent)
-    : QWidget(parent)
-{ // constructor
+FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
 
     // create the window layout
     windowLayoutMain = new QHBoxLayout(this);
@@ -31,7 +16,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     windowLayoutUI->addLayout(windowLayouttest);
 
     QLabel *label = new QLabel("Rest Density");
-    label->setMaximumHeight(10);
+    label->setMaximumHeight(20);
     windowLayouttest->addWidget(label);
     QDoubleSpinBox *px = new QDoubleSpinBox;
     px->setMaximumWidth(80);
@@ -44,7 +29,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(changeRestDensity(double)));
 
     QLabel *g = new QLabel("Gas Constant");
-    g->setMaximumHeight(10);
+    g->setMaximumHeight(20);
     windowLayouttest->addWidget(g);
     QDoubleSpinBox *k = new QDoubleSpinBox;
     k->setMaximumWidth(80);
@@ -57,7 +42,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(changeGasConstant(double)));
 
     QLabel *v = new QLabel("Viscosity Constant");
-    v->setMaximumHeight(10);
+    v->setMaximumHeight(20);
     windowLayouttest->addWidget(v);
     QDoubleSpinBox *vc = new QDoubleSpinBox;
     vc->setMaximumWidth(80);
@@ -70,7 +55,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(changeViscosityConstant(double)));
 
 //    QLabel *r = new QLabel("Kernel Radius");
-//    r->setMaximumHeight(10);
+//    r->setMaximumHeight(20);
 //    windowLayouttest->addWidget(r);
 //    QDoubleSpinBox *kr = new QDoubleSpinBox;
 //    kr->setMaximumWidth(80);
@@ -82,7 +67,7 @@ FluidWindow::FluidWindow(QWidget *parent)
 //    connect(kr, SIGNAL(valueChanged(double)),  reader  , SLOT(changeKernelRadius(double)));
 
     QLabel *s = new QLabel("Surface Tension Constant");
-    s->setMaximumHeight(10);
+    s->setMaximumHeight(20);
     windowLayouttest->addWidget(s);
     QDoubleSpinBox *st = new QDoubleSpinBox;
     st->setMaximumWidth(80);
@@ -95,7 +80,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(changeSurfaceTension(double)));
 
     QLabel *d = new QLabel("Delta Time");
-    d->setMaximumHeight(10);
+    d->setMaximumHeight(20);
     windowLayouttest->addWidget(d);
     QDoubleSpinBox *dt = new QDoubleSpinBox;
     dt->setMaximumWidth(80);
@@ -109,7 +94,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(dt, SIGNAL(valueChanged(double)),  reader  , SLOT(changeTime(double)));
 
     QLabel *dl = new QLabel("Damp");
-    dl->setMaximumHeight(10);
+    dl->setMaximumHeight(20);
     windowLayouttest->addWidget(dl);
     QDoubleSpinBox *dd = new QDoubleSpinBox;
     dd->setMaximumWidth(80);
@@ -122,6 +107,7 @@ FluidWindow::FluidWindow(QWidget *parent)
     windowLayouttest->addWidget(dd);
     connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(changeDamp(double)));
 
+    // Check boxes for toggling
     QCheckBox *S2 = new QCheckBox("Toggle Viscosity", this);
     S2->setMaximumWidth(400);
     S2->setCheckable(true);
@@ -143,6 +129,8 @@ FluidWindow::FluidWindow(QWidget *parent)
     connect(visSur,SIGNAL(released()), reader, SLOT(SS1()));
     windowLayoutUI->addWidget(visSur);
 
+
+    //Arrow Buttons
     TriangularButton *downArrow = new TriangularButton("",this,0);
     downArrow->setStyleSheet("background-color: rgb(101, 101, 101);");
     downArrow->setMaximumWidth(25);
@@ -193,8 +181,7 @@ FluidWindow::FluidWindow(QWidget *parent)
 
 } // constructor
 
-FluidWindow::~FluidWindow()
-{ // destructor
+FluidWindow::~FluidWindow(){ // destructor
     delete ptimer;
 
 } // destructor

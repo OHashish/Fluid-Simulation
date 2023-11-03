@@ -9,11 +9,16 @@
 #include <QDoubleSpinBox>
 #include <QBoxLayout>
 #include <QLabel>
-#include <QComboBox>
 #include "fluid.h"
+#include "triangularbutton.h"
+#include <iostream>
+#include <QPushButton>
+#include <QWindow>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QCheckBox>
 
-class FluidWindow: public QWidget
-{
+class FluidWindow: public QWidget{
     Q_OBJECT
 public slots:
     void handleButton();

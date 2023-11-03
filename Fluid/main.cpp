@@ -24,5 +24,4 @@ int main(int argc, char **argv){
 
     // set QT running
     return app.exec();
-
 }

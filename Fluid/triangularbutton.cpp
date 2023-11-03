@@ -1,16 +1,11 @@
 #include "triangularbutton.h"
-#include <QPainter>
-#include <QPolygonF>
-#include <QPainterPath>
-#include <QMouseEvent>
-TriangularButton::TriangularButton(const QString &text, QWidget *parent, int rotate)
-    : QPushButton(text, parent),rotate(rotate)
-{
+
+TriangularButton::TriangularButton(const QString &text, QWidget *parent, int rotate):
+    QPushButton(text, parent),rotate(rotate){
 
 }
 
-void TriangularButton::paintEvent(QPaintEvent *event)
-{
+void TriangularButton::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
 
     QPainter painter(this);
@@ -27,7 +22,7 @@ void TriangularButton::paintEvent(QPaintEvent *event)
     painter.drawText(rect(), Qt::AlignCenter, text());
 }
 
-void TriangularButton::mousePressEvent(QMouseEvent *event) {
+void TriangularButton::mousePressEvent(QMouseEvent *event){
     QPolygonF triangle = trianglePoints(rotate);
 
     if (triangle.containsPoint(event->pos(), Qt::OddEvenFill)) {
@@ -39,7 +34,7 @@ void TriangularButton::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-void TriangularButton::mouseReleaseEvent(QMouseEvent *event) {
+void TriangularButton::mouseReleaseEvent(QMouseEvent *event){
     QPolygonF triangle = trianglePoints(rotate);
 
     if (triangle.containsPoint(event->pos(), Qt::OddEvenFill)) {
@@ -53,6 +48,7 @@ void TriangularButton::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 QPolygonF TriangularButton::trianglePoints(int rotate){
+    //Set the arrow shape according to desired rotation
     QPolygonF triangle;
     if (rotate == 90){
         triangle << QPointF(width()/2, height()/2);

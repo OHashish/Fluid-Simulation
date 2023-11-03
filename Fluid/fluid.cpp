@@ -1,20 +1,5 @@
 #define _USE_MATH_DEFINES
-#include <fstream>
-#include <string>
 #include "fluid.h"
-#include "string.h"
-#include "cstring"
-#include "stdlib.h"
-#include <algorithm>
-#include <math.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/gl.h>
-#include <QWidget>
-#include <QGLWidget>
-#include <QTimer>
-#include <QDebug>
-#include <QMouseEvent>
-#include <iostream>
 
 bool toggleViscosity = true;
 bool toggleSurfaceTension = true;
@@ -29,13 +14,14 @@ bool visualizeSurface = false;
 //double H_KER_RAD = PARTICLE_RADIUS*2.2;
 //double VELOCITY_DAMP = 0.5;
 //double MASS = 2.5;
+//double SURFACE_TENSION_CONSTANT = 0.5;
+//double VISCOSITY_CONSTANT = 200.0;
 
+// 2D kernels
 //float POLY6 = 4.f / (M_PI * pow(H_KER_RAD, 8.f));
 //float EPS = PARTICLE_RADIUS; // boundary epsilon
 //float SPIKY_GRAD = -10.f / (M_PI * pow(H_KER_RAD, 5.f));
 //float VISC_LAP = 40.f / (M_PI * pow(H_KER_RAD, 5.f));
-//double SURFACE_TENSION_CONSTANT = 0.5;
-//double VISCOSITY_CONSTANT = 200.0;
 
 //Play
 glm::dvec2 G(0.0, -10.0);
@@ -47,9 +33,10 @@ double H_KER_RAD = PARTICLE_RADIUS*2.01;
 double VELOCITY_DAMP = 0.5;
 double MASS = 2.5;
 double SURFACE_TENSION_CONSTANT = 0.9;
-double VISCOSITY_CONSTANT = 7000.0;
+double VISCOSITY_CONSTANT = 4000.0;
 float EPS = PARTICLE_RADIUS; // boundary epsilon
 
+// 3D kernels
 double POLY6 = 315.0 / (64.0 * M_PI * pow(H_KER_RAD, 9));
 double POLY6_GRAD = -945.f / (32.0* M_PI * pow(H_KER_RAD,9.f));
 double POLY6_LAP = -945.f / (8.0 * M_PI * pow(H_KER_RAD, 9.f));
@@ -369,7 +356,7 @@ void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, doub
         glm::dvec2 gravityForce(G * MASS);
         viscosityForce *= viscosityConstant;
         double nMagnitude = glm::length(n);
-        surfaceTensionForce *= -1.0*surfaceConstant * (n/nMagnitude) ;
+        surfaceTensionForce *= -1.0 * surfaceConstant * (n/nMagnitude) ;
 
         if (toggleViscosity){
             gravityForce += viscosityForce;
@@ -378,8 +365,10 @@ void Fluid::calculateForces(double kernelRadiusH, double viscosityConstant, doub
             gravityForce += surfaceTensionForce;
         }
 
-        if (visualizeSurface && nMagnitude < 0.1){
-            pi.color = nMagnitude/0.1;
+        //Needs to be decreased if number of particles increase
+        float threshold = 0.2;
+        if (visualizeSurface && nMagnitude < threshold){
+            pi.color = nMagnitude/threshold;
         }else{
             pi.color = 0.0;
         }
@@ -397,9 +386,10 @@ void Fluid::integrate(double dt, double damp,bool first){
 
             p.position += p.velocity * dt*2.0;
 
-            if (glm::length(p.velocity) > 3.0){
-                p.velocity *= 0.9;
-            }
+            //Damp high speed particles
+//            if (glm::length(p.velocity) > 3.0){
+//                p.velocity *= 0.9;
+//            }
             //Left Barrier
             if (p.position.x - EPS < -0.95){
                 p.velocity.x *= -damp;

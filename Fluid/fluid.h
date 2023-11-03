@@ -2,14 +2,27 @@
 #define  _FLUID_H_
 
 #include <vector>
-#include <map>
 #include <string>
 #include <QGLWidget>
 #include <QWidget>
 #include <QObject>
-#include <QFileDialog>
 #include "fluidwindow.h"
 #include <glm/glm.hpp>
+#include "string.h"
+#include "cstring"
+#include "stdlib.h"
+#include <algorithm>
+#include <math.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/gl.h>
+#include <QWidget>
+#include <QGLWidget>
+#include <QTimer>
+#include <QDebug>
+#include <QMouseEvent>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 using namespace  std;
 
@@ -19,27 +32,29 @@ class  Fluid: public QGLWidget{
 public slots:
 
     void updateTime();
-    void changeRestDensity(double);
+
     void SS1();
     void SS2();
     void SS3();
+
     void moveUp();
     void moveDown();
     void moveRight();
     void moveLeft();
-    void changeGasConstant(double k);
 
     void changeViscosityConstant(double k);
-    void changeKernelRadius(double k);
     void changeSurfaceTension(double k);
+    void changeKernelRadius(double k);
+    void changeRestDensity(double);
+    void changeGasConstant(double k);
     void changeTime(double k);
     void changeDamp(double k);
+
 public:
     Fluid();
     Fluid( QWidget *parent);
     ~Fluid();
     void  Clear();
-    // translation in window x,y
 
     // called when OpenGL context is set up
     void initializeGL();
@@ -57,20 +72,18 @@ public:
         double color;
     };
 
-    float horizontalPos,verticalPos;
-
     vector<Particle> particles;
-
-    double computePoly6Kernel(double d, double h);
+    void addParticle(double i, double j);
 
     void simulateFluid(double h, double dt, double restDensity, double stiffness, double viscosityConstant, double damp, double surfaceConstant);
+    void calculateForces( double supportRadius, double viscosityConstant,  double surfaceConstant);
+    void calculatePressureDensity(double supportRadius, double stiffness, double restDensity);
+    void integrate(double dt, double damp, bool first);
+    double computePoly6Kernel(double d, double h);
     void blobCreator();
 
-    void calculatePressureDensity(double supportRadius, double stiffness, double restDensity);
-    void calculateForces( double supportRadius, double viscosityConstant,  double surfaceConstant);
-    void integrate(double dt, double damp, bool first);
+    float horizontalPos,verticalPos;
 
-    void addParticle(double i, double j);
 };
 
 

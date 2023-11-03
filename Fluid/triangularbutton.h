@@ -2,9 +2,12 @@
 #define TRIANGULARBUTTON_H
 
 #include <QPushButton>
+#include <QPainter>
+#include <QPolygonF>
+#include <QPainterPath>
+#include <QMouseEvent>
 
-class TriangularButton : public QPushButton
-{
+class TriangularButton : public QPushButton{
     Q_OBJECT
 public:
     TriangularButton(const QString &text, QWidget *parent = nullptr,int rotate = 0);
