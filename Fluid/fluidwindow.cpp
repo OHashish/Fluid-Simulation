@@ -85,8 +85,8 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     QDoubleSpinBox *dt = new QDoubleSpinBox;
     dt->setMaximumWidth(80);
     dt->setMaximumHeight(30);
-    dt->setMinimum(0);
-    dt->setMaximum(1.0);
+    dt->setMinimum(-10);
+    dt->setMaximum(10.0);
     dt->setDecimals(3);
     dt->setSingleStep(0.05);
     dt->setValue(0.3);

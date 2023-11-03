@@ -1,7 +1,7 @@
 #ifndef __GL_POLYGON_WINDOW_H__
 #define __GL_POLYGON_WINDOW_H__ 1
 
-#include <QGLWidget>
+//#include <QGLWidget>
 #include <QMenuBar>
 #include <QSlider>
 #include <QTimer>

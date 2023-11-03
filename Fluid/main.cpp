@@ -7,7 +7,7 @@
 #include <OpenGL/glu.h>
 #include <OpenGL/gl.h>
 #include <cmath>
-#include <QGLWidget>
+//#include <QGLWidget>
 #include <QApplication>
 #include <QFileDialog>
 #include <QWindow>

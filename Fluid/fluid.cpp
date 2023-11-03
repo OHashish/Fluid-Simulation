@@ -5,6 +5,7 @@ bool toggleViscosity = true;
 bool toggleSurfaceTension = true;
 bool visualizeSurface = false;
 
+float tSpeed = 0;
 //Default
 //glm::dvec2 G(0.0, -10.0);
 //double REST_DENSITY = 500.0;
@@ -48,12 +49,28 @@ double VISC_LAP = 45.f / (M_PI * pow(H_KER_RAD, 6.f));
 //0.06 --- 2300 -- 2300 -- 0.8
 //0.08 --- 1000 -- 1250 -- 0.3
 //0.09 --- 700 -- 800 -- 0.3
+
+typedef struct materialStruct {
+  GLfloat ambient[4];
+  GLfloat diffuse[4];
+  GLfloat specular[4];
+  GLfloat shininess;
+} materialStruct;
+
+static materialStruct chromeMaterials = {
+    {0.25f, 0.25f, 0.25f, 1.0f  },
+    {0.4f, 0.4f, 0.4f, 1.0f },
+    {0.774597f, 0.774597f, 0.774597f, 1.0f },
+    20.8f
+};
+
+
 Fluid::Fluid(){
     horizontalPos = 0.f;
     verticalPos = 0.f;
 }
 
-Fluid::Fluid(QWidget *parent) : QGLWidget(parent){
+Fluid::Fluid(QWidget *parent) : QOpenGLWidget(parent){
     QTimer *ptimer = new QTimer(this);
     ptimer->start(1);
     connect(ptimer, SIGNAL(timeout()),  this, SLOT(updateTime()));
@@ -71,7 +88,7 @@ void Fluid::Clear(){
 }
 void Fluid::initializeGL(){
     glEnable(GL_DEPTH_TEST);
-    //    glShadeModel(GL_FLAT);
+//        glShadeModel(GL_FLAT);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
@@ -95,8 +112,12 @@ void Fluid::paintGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // set light position first
-    GLfloat light_position[] = {0.0f, 0.0f, 1.0f ,0.0};
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, chromeMaterials.ambient);
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, chromeMaterials.diffuse);
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, chromeMaterials.specular);
+//    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, chromeMaterials.shininess);
+
+    GLfloat light_position[] = {0.0f, 0.0f, 0.7f ,0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // apply translation for interface control
@@ -154,10 +175,11 @@ void Fluid::paintGL(){
             gluQuadricOrientation( quadric,GLU_OUTSIDE);
 
             for ( auto& p : particles){
+
                 glColor3f(0.0f,p.color,0.8f);
                 glPushMatrix();
                     glTranslatef(p.position.x, p.position.y, 0);
-                    gluDisk(quadric, 0, PARTICLE_RADIUS, 20, 10);
+                    gluDisk(quadric, 0, PARTICLE_RADIUS+0.02, 20, 10);
                 glPopMatrix();
             }
         glPopMatrix();
@@ -205,6 +227,7 @@ void Fluid::updateTime(){
 
     simulateFluid(kernelRadiusH,dt,restDensity,gasConstant,viscosityConstant , damp,surfaceConstant);
     this->repaint();
+    tSpeed++;
 
 }
 
@@ -241,7 +264,7 @@ void Fluid::changeSurfaceTension(double k){
 void Fluid::changeTime(double k){
     DT = k;
     Clear();
-    blobCreator();  
+    blobCreator();
 }
 
 void Fluid::changeDamp(double k){
@@ -416,6 +439,9 @@ void Fluid::integrate(double dt, double damp,bool first){
 //                p.velocity.y *= -damp;
 //                p.position.y = 3.0 - EPS;
 //            }
+            float jitter = static_cast<float>(rand()) / static_cast<float>(RAND_MAX / 2) - 1.0f;
+//            cout<<jitter<<endl;
+            p.position.x += 0.001*jitter;
         }
 
     }

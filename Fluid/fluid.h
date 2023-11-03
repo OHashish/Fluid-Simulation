@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <QGLWidget>
+//#include <QGLWidget>
 #include <QWidget>
 #include <QObject>
 #include "fluidwindow.h"
@@ -16,17 +16,16 @@
 #include <OpenGL/glu.h>
 #include <OpenGL/gl.h>
 #include <QWidget>
-#include <QGLWidget>
 #include <QTimer>
 #include <QDebug>
 #include <QMouseEvent>
 #include <iostream>
 #include <fstream>
 #include <string>
-
+#include <QOpenGLWidget>
 using namespace  std;
 
-class  Fluid: public QGLWidget{
+class  Fluid: public QOpenGLWidget{
 
     Q_OBJECT
 public slots:
