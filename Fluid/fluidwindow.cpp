@@ -7,17 +7,17 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
 
     windowLayoutUI = new QVBoxLayout(this);
 
-    windowLayouttest= new QVBoxLayout(this);
+    windowLayoutSpinBox= new QVBoxLayout(this);
 
     Fluid* reader = new Fluid(NULL);
 
     windowLayoutMain->addWidget(reader);
     windowLayoutMain->addLayout(windowLayoutUI);
-    windowLayoutUI->addLayout(windowLayouttest);
+    windowLayoutUI->addLayout(windowLayoutSpinBox);
 
     QLabel *label = new QLabel("Rest Density");
     label->setMaximumHeight(20);
-    windowLayouttest->addWidget(label);
+    windowLayoutSpinBox->addWidget(label);
     QDoubleSpinBox *px = new QDoubleSpinBox;
     px->setMaximumWidth(80);
     px->setMaximumHeight(30);
@@ -25,12 +25,12 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     px->setMaximum(5000);
     px->setValue(700);
     px->setSingleStep(50);
-    windowLayouttest->addWidget(px);
+    windowLayoutSpinBox->addWidget(px);
     connect(px, SIGNAL(valueChanged(double)),  reader  , SLOT(changeRestDensity(double)));
 
     QLabel *g = new QLabel("Gas Constant");
     g->setMaximumHeight(20);
-    windowLayouttest->addWidget(g);
+    windowLayoutSpinBox->addWidget(g);
     QDoubleSpinBox *k = new QDoubleSpinBox;
     k->setMaximumWidth(80);
     k->setMaximumHeight(30);
@@ -38,12 +38,12 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     k->setMaximum(5000);
     k->setValue(900);
     k->setSingleStep(50);
-    windowLayouttest->addWidget(k);
+    windowLayoutSpinBox->addWidget(k);
     connect(k, SIGNAL(valueChanged(double)),  reader  , SLOT(changeGasConstant(double)));
 
     QLabel *v = new QLabel("Viscosity Constant");
     v->setMaximumHeight(20);
-    windowLayouttest->addWidget(v);
+    windowLayoutSpinBox->addWidget(v);
     QDoubleSpinBox *vc = new QDoubleSpinBox;
     vc->setMaximumWidth(80);
     vc->setMaximumHeight(30);
@@ -51,7 +51,7 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     vc->setMaximum(10000);
     vc->setValue(3000);
     vc->setSingleStep(100);
-    windowLayouttest->addWidget(vc);
+    windowLayoutSpinBox->addWidget(vc);
     connect(vc, SIGNAL(valueChanged(double)),  reader  , SLOT(changeViscosityConstant(double)));
 
 //    QLabel *r = new QLabel("Kernel Radius");
@@ -68,7 +68,7 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
 
     QLabel *s = new QLabel("Surface Tension Constant");
     s->setMaximumHeight(20);
-    windowLayouttest->addWidget(s);
+    windowLayoutSpinBox->addWidget(s);
     QDoubleSpinBox *st = new QDoubleSpinBox;
     st->setMaximumWidth(80);
     st->setMaximumHeight(30);
@@ -76,12 +76,12 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     st->setMaximum(1);
     st->setSingleStep(0.1);
     st->setValue(0.9);
-    windowLayouttest->addWidget(st);
+    windowLayoutSpinBox->addWidget(st);
     connect(st, SIGNAL(valueChanged(double)),  reader  , SLOT(changeSurfaceTension(double)));
 
     QLabel *d = new QLabel("Delta Time");
     d->setMaximumHeight(20);
-    windowLayouttest->addWidget(d);
+    windowLayoutSpinBox->addWidget(d);
     QDoubleSpinBox *dt = new QDoubleSpinBox;
     dt->setMaximumWidth(80);
     dt->setMaximumHeight(30);
@@ -90,12 +90,12 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     dt->setDecimals(3);
     dt->setSingleStep(0.05);
     dt->setValue(0.3);
-    windowLayouttest->addWidget(dt);
+    windowLayoutSpinBox->addWidget(dt);
     connect(dt, SIGNAL(valueChanged(double)),  reader  , SLOT(changeTime(double)));
 
     QLabel *dl = new QLabel("Damp");
     dl->setMaximumHeight(20);
-    windowLayouttest->addWidget(dl);
+    windowLayoutSpinBox->addWidget(dl);
     QDoubleSpinBox *dd = new QDoubleSpinBox;
     dd->setMaximumWidth(80);
     dd->setMaximumHeight(30);
@@ -104,7 +104,7 @@ FluidWindow::FluidWindow(QWidget *parent): QWidget(parent){ // constructor
     dd->setDecimals(2);
     dd->setSingleStep(0.1);
     dd->setValue(0.5);
-    windowLayouttest->addWidget(dd);
+    windowLayoutSpinBox->addWidget(dd);
     connect(dd, SIGNAL(valueChanged(double)),  reader  , SLOT(changeDamp(double)));
 
     // Check boxes for toggling

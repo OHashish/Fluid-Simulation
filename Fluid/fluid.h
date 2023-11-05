@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-//#include <QGLWidget>
 #include <QWidget>
 #include <QObject>
 #include "fluidwindow.h"
@@ -23,6 +22,7 @@
 #include <fstream>
 #include <string>
 #include <QOpenGLWidget>
+//#include <QGLWidget>
 using namespace  std;
 
 class  Fluid: public QOpenGLWidget{

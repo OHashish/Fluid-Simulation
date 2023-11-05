@@ -34,7 +34,7 @@ public:
 
     QHBoxLayout *windowLayoutMain;
     QVBoxLayout *windowLayoutUI;
-    QVBoxLayout *windowLayouttest;
+    QVBoxLayout *windowLayoutSpinBox;
 
 
 
